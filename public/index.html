@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Event Registration</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; background: #f9f9f9; }
+    form { max-width: 400px; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
+    label { display: block; margin-top: 10px; }
+    input { width: 100%; padding: 8px; margin-top: 4px; }
+    button { margin-top: 15px; padding: 10px 15px; background: #28a745; color: white; border: none; cursor: pointer; border-radius: 4px; }
+    button:hover { background: #218838; }
+    #message { margin-top: 15px; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <h1>Event Registration</h1>
+  <form id="registrationForm">
+    <label>Name:</label>
+    <input type="text" id="name" required>
+
+    <label>Email:</label>
+    <input type="email" id="email" required>
+
+    <button type="submit">Register</button>
+  </form>
+  <p id="message"></p>
+
+  <p><a href="view.html">View Registrations</a></p>
+
+  <script>
+    document.getElementById("registrationForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const name = document.getElementById("name").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const messageEl = document.getElementById("message");
+
+      if (!name || !email) {
+        messageEl.textContent = "Please fill in all fields.";
+        messageEl.style.color = "red";
+        return;
+      }
+
+      try {
+        const res = await fetch("/api/register", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name, email })
+        });
+
+        const data = await res.json();
+        if (res.ok) {
+          messageEl.textContent = data.message;
+          messageEl.style.color = "green";
+          document.getElementById("registrationForm").reset();
+        } else {
+          messageEl.textContent = data.message;
+          messageEl.style.color = "red";
+        }
+      } catch (err) {
+        messageEl.textContent = "Error submitting registration.";
+        messageEl.style.color = "red";
+      }
+    });
+  </script>
+</body>
+</html>

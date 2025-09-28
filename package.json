@@ -1,0 +1,10 @@
+{
+  "name": "event-registration",
+  "version": "1.0.0",
+  "description": "Simple Event Registration app",
+  "main": "index.js",
+  "scripts": {
+    "start": "vercel dev"
+  },
+  "dependencies": {}
+}
